@@ -1,0 +1,57 @@
+
+
+<!Doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Gestionnaire de Playlists</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Arial, sans-serif; background: #f5f5f5; padding: 20px; }
+        .container { max-width: 1200px; margin: 0 auto; }
+        h1 { color: #333; margin-bottom: 30px; }
+        .add-form { background: white; padding: 20px; border-radius: 8px; margin-bottom: 30px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .add-form input, .add-form textarea { width: 100%; padding: 10px; margin: 5px 0; border: 1px solid #ddd; border-radius: 4px; }
+        .add-form button { background: #4CAF50; color: white; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer; margin-top: 10px; }
+        .add-form button:hover { background: #45a049; }
+        .categories { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
+        .category-card { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .category-card h3 { color: #333; margin-bottom: 10px; }
+        .category-card p { color: #666; margin-bottom: 15px; }
+        .category-card .actions { display: flex; gap: 10px; }
+        .category-card button, .category-card a { padding: 8px 15px; border: none; border-radius: 4px; cursor: pointer; text-decoration: none; display: inline-block; }
+        .btn-view { background: #2196F3; color: white; }
+        .btn-delete { background: #f44336; color: white; }
+        .btn-view:hover { background: #0b7dda; }
+        .btn-delete:hover { background: #da190b; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>📁 Gestionnaire de Playlists</h1>
+
+    <div class="add-form">
+        <h2>➕ Nouvelle Catégorie</h2>
+        <form th:action="@{/category/add}" method="post">
+            <input type="text" name="name" placeholder="Nom de la catégorie" required>
+            <textarea name="description" placeholder="Description (optionnelle)" rows="2"></textarea>
+            <button type="submit">Créer la catégorie</button>
+        </form>
+    </div>
+
+    <div class="categories">
+        <div class="category-card" th:each="cat : ${categories}">
+            <h3 th:text="${cat.name}">Catégorie</h3>
+            <p th:text="${cat.description} ?: 'Pas de description'">Description</p>
+            <p style="color: #999; font-size: 0.9em;" th:text="${cat.linksCount} + ' lien(s)'">0 liens</p>
+            <div class="actions">
+                <a th:href="@{/category/{id}(id=${cat.id})}" class="btn-view">Voir les liens</a>
+                <form th:action="@{/category/{id}/delete(id=${cat.id})}" method="post" style="display: inline;">
+                    <button type="submit" class="btn-delete" onclick="return confirm('Supprimer cette catégorie ?')">Supprimer</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

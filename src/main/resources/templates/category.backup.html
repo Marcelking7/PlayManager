@@ -1,0 +1,70 @@
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${category.name}">Catégorie</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Arial, sans-serif; background: #f5f5f5; padding: 20px; }
+        .container { max-width: 1200px; margin: 0 auto; }
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
+        h1 { color: #333; }
+        .back-btn { background: #666; color: white; padding: 10px 20px; text-decoration: none; border-radius: 4px; }
+        .back-btn:hover { background: #555; }
+        .add-form { background: white; padding: 20px; border-radius: 8px; margin-bottom: 30px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .add-form input { width: 100%; padding: 10px; margin: 5px 0; border: 1px solid #ddd; border-radius: 4px; }
+        .add-form button { background: #4CAF50; color: white; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer; margin-top: 10px; width: 100%; }
+        .add-form button:hover { background: #45a049; }
+        .links-list { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .link-item { padding: 15px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; }
+        .link-item:last-child { border-bottom: none; }
+        .link-info { flex: 1; }
+        .link-info h3 { color: #333; margin-bottom: 5px; }
+        .link-info a { color: #2196F3; text-decoration: none; word-break: break-all; }
+        .link-info a:hover { text-decoration: underline; }
+        .platform-badge { display: inline-block; background: #e3f2fd; color: #1976d2; padding: 3px 8px; border-radius: 3px; font-size: 0.85em; margin-top: 5px; }
+        .delete-btn { background: #f44336; color: white; padding: 8px 15px; border: none; border-radius: 4px; cursor: pointer; }
+        .delete-btn:hover { background: #da190b; }
+        .empty-state { text-align: center; padding: 40px; color: #999; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1>📂 <span th:text="${category.name}">Catégorie</span></h1>
+        <a href="/" class="back-btn">← Retour</a>
+    </div>
+
+    <div class="add-form">
+        <h2>➕ Ajouter un lien</h2>
+        <form th:action="@{/link/add}" method="post">
+            <input type="hidden" name="categoryId" th:value="${category.id}">
+            <input type="text" name="title" placeholder="Titre de la playlist" required>
+            <input type="url" name="url" placeholder="https://youtube.bj.csam/playlist?list=..." required>
+            <button type="submit">Ajouter le lien</button>
+        </form>
+    </div>
+
+    <div class="links-list">
+        <h2>🔗 Liens enregistrés (<span th:text="${links.size()}">0</span>)</h2>
+        <div th:if="${links.empty}" class="empty-state">
+            <p>Aucun lien pour le moment. Ajoutez-en un ci-dessus !</p>
+        </div>
+        <div class="link-item" th:each="link : ${links}">
+            <div class="link-info">
+                <h3 th:text="${link.title}">Titre</h3>
+                <a th:href="${link.url}" target="_blank" th:text="${link.url}">URL</a>
+                <div>
+                    <span class="platform-badge" th:text="${link.platform}">Plateforme</span>
+                </div>
+            </div>
+            <form th:action="@{/link/{id}/delete(id=${link.id})}" method="post">
+                <input type="hidden" name="categoryId" th:value="${category.id}">
+                <button type="submit" class="delete-btn" onclick="return confirm('Supprimer ce lien ?')">🗑️</button>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+</html>

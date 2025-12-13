@@ -1,0 +1,61 @@
+/*
+// ====================================================================
+// MODULE: components/_category-icons.css
+//
+// Styles pour les icônes de catégorie cycliques et leur fond dégradé.
+// ====================================================================
+*/
+
+/* Les styles sont appliqués à la balise SVG dans .card-icon et .category-icon-large */
+
+/* Icon 0: Le Dossier (existant) */
+.card-icon.icon-0 svg path,
+.category-icon-large.icon-0 svg path {
+    /* Utilise la syntaxe CSS 'content' pour injecter le chemin SVG */
+    d: path("M3 7V17C3 18.1046 3.89543 19 5 19H19C20.1046 19 21 18.1046 21 17V7M3 7L12 2L21 7M3 7L12 12M21 7L12 12");
+}
+
+/* Icon 1: Note de Musique */
+.card-icon.icon-1 { background: linear-gradient(135deg, #f87171, #ef4444); }
+.card-icon.icon-1 svg path,
+.category-icon-large.icon-1 { background: linear-gradient(135deg, #f87171, #ef4444); }
+.category-icon-large.icon-1 svg path {
+    /* Music Note */
+    d: path("M9 18V5l12-2v13");
+}
+
+/* Icon 2: Cœur / Favoris */
+.card-icon.icon-2 { background: linear-gradient(135deg, #60a5fa, #3b82f6); }
+.card-icon.icon-2 svg path,
+.category-icon-large.icon-2 { background: linear-gradient(135deg, #60a5fa, #3b82f6); }
+.category-icon-large.icon-2 svg path {
+    /* Heart */
+    d: path("M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z");
+}
+
+/* Icon 3: Vidéo / Film */
+.card-icon.icon-3 { background: linear-gradient(135deg, #facc15, #eab308); }
+.card-icon.icon-3 svg path,
+.category-icon-large.icon-3 { background: linear-gradient(135deg, #facc15, #eab308); }
+.category-icon-large.icon-3 svg path {
+    /* Video */
+    d: path("M23 7l-7 5 7 5V7zM16 13H2a2 2 0 01-2-2V9a2 2 0 012-2h14v6z");
+}
+
+/* Icon 4: Ordinateur / Dev */
+.card-icon.icon-4 { background: linear-gradient(135deg, #34d399, #10b981); }
+.card-icon.icon-4 svg path,
+.category-icon-large.icon-4 { background: linear-gradient(135deg, #34d399, #10b981); }
+.category-icon-large.icon-4 svg path {
+    /* Code / Terminal */
+    d: path("M8 20L4 16l4-4M16 4l4 4-4 4M12 18V6");
+}
+
+/* Icon 5: Livre / Lecture */
+.card-icon.icon-5 { background: linear-gradient(135deg, #a78bfa, #8b5cf6); }
+.card-icon.icon-5 svg path,
+.category-icon-large.icon-5 { background: linear-gradient(135deg, #a78bfa, #8b5cf6); }
+.category-icon-large.icon-5 svg path {
+    /* Book */
+    d: path("M4 19.5A2.5 2.5 0 016.5 17H20M6 4h14v10M18 10l-4-4-4 4");
+}

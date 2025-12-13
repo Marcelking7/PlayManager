@@ -1,0 +1,26 @@
+
+/* ===== Empty State ===== */
+.empty-state {
+text-align: center;
+padding: 4rem 2rem;
+}
+
+.empty-icon {
+width: 5rem;
+height: 5rem;
+margin: 0 auto 1.5rem;
+color: var(--color-text-muted);
+opacity: 0.3;
+stroke-width: 1.5;
+}
+
+.empty-state h2 {
+font-size: 1.5rem;
+color: var(--color-text);
+margin-bottom: 0.5rem;
+}
+
+.empty-state p {
+color: var(--color-text-muted);
+margin-bottom: 1.5rem;
+}

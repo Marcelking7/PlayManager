@@ -1,0 +1,48 @@
+/*
+// ====================================================================
+// Fichier principal : style.css
+//
+// Ce fichier sert de point d'entrée unique et utilise la directive
+// @import pour agréger tous les fichiers partiels modulaires.
+// Il ne devrait contenir aucun style CSS direct (à l'exception des imports).
+// ====================================================================
+*/
+
+/* ------------------------------------------------------------------ */
+/* 1. BASE & CONFIGURATION (Variables, Reset, Fondations) */
+/* ------------------------------------------------------------------ */
+
+@import url("./base/_variables.css");
+@import url("./base/_reset.css");
+@import url("./base/_base.css");
+@import url("./base/_typography.css");
+
+
+/* ------------------------------------------------------------------ */
+/* 2. LAYOUT (Structure Globale de l'Application) */
+/* ------------------------------------------------------------------ */
+
+@import url("./layout/_app-layout.css");
+@import url("./layout/_header.css");
+@import url("./layout/_main-content.css");
+
+
+/* ------------------------------------------------------------------ */
+/* 3. COMPONENTS (Modules Réutilisables) */
+/* ------------------------------------------------------------------ */
+
+@import url("./components/_buttons.css");
+@import url("./components/_cards.css");
+@import url("./components/_forms.css");
+@import url("./components/_modal.css");
+@import url("./components/_link-list.css");
+@import url("./components/_stats-bar.css");
+
+
+/* ------------------------------------------------------------------ */
+/* 4. UTILITIES (Helpers, Animations, États Spécifiques) */
+/* ------------------------------------------------------------------ */
+
+@import url("./utilities/_animations.css");
+@import url("./utilities/_empty-state.css");
+@import url("./utilities/_responsive.css");

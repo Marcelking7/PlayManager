@@ -1,0 +1,17 @@
+/*
+// ====================================================================
+// MODULE: layout/_main-content.css
+//
+// Contient les styles pour l'enveloppe et la zone de contenu principale
+// (ex: .main-content, .content-wrapper).
+// ====================================================================
+*/
+.main-content {
+    flex: 1;
+    padding: 2rem;
+}
+
+.content-wrapper {
+    max-width: 1400px;
+    margin: 0 auto;
+}/* Styles pour le module '_main-content.css' - Contenu à découper et coller ici. */

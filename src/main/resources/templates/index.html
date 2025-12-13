@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestionnaire de Playlists</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div class="app-container">
+    <header class="app-header">
+        <div class="header-content">
+            <div class="logo">
+                <svg class="logo-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <path d="M3 7V17C3 18.1046 3.89543 19 5 19H19C20.1046 19 21 18.1046 21 17V7M3 7L12 2L21 7M3 7L12 12M21 7L12 12M12 12V22"/>
+                </svg>
+                <h1>Playlist Manager</h1>
+            </div>
+            <button class="btn btn-primary" onclick="toggleModal('addCategoryModal')">
+                <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <path d="M12 5v14M5 12h14"/>
+                </svg>
+                Nouvelle Catégorie
+            </button>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <div class="content-wrapper">
+            <div th:if="${categories.empty}" class="empty-state">
+                <svg class="empty-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <path d="M3 7V17C3 18.1046 3.89543 19 5 19H19C20.1046 19 21 18.1046 21 17V7M3 7L12 2L21 7M3 7L12 12M21 7L12 12"/>
+                </svg>
+                <h2>Aucune catégorie</h2>
+                <p>Commencez par créer votre première catégorie pour organiser vos playlists</p>
+                <button class="btn btn-primary" onclick="toggleModal('addCategoryModal')">Créer une catégorie</button>
+            </div>
+
+            <div th:unless="${categories.empty}" class="categories-grid">
+                <article class="category-card" th:each="cat, stat : ${categories}" th:if="${cat != null}">
+
+                    <a th:href="@{/category/{id}(id=${cat.id})}" class="card-link-overlay"></a>
+
+                    <div class="card-header">
+                        <div class="card-icon" th:classappend="'icon-' + ${stat.index % 6}">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                <path d="M3 7V17C3 18.1046 3.89543 19 5 19H19C20.1046 19 21 18.1046 21 17V7M3 7L12 2L21 7M3 7L12 12M21 7L12 12"/>
+                            </svg>
+                        </div>
+
+                        <div class="card-actions">
+                            <button class="btn-icon-only"
+                                    th:onclick="|toggleModal('deleteCategoryModal'); document.getElementById('deleteCategoryId').value=${cat.id};|"
+                                    aria-label="Supprimer la catégorie">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                    <path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="card-body">
+                        <h3 th:text="${cat.name}">Catégorie</h3>
+                        <p class="card-description" th:text="${cat.description} ?: 'Aucune description'">Description</p>
+                        <div class="card-stats">
+                        <span class="stat-badge">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                <path d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"/>
+                            </svg>
+                            <span th:text="${cat.linksCount}">0</span>
+                            <span th:text="${cat.linksCount > 1} ? 'liens' : 'lien'">lien</span>
+                        </span>
+                        </div>
+                    </div>
+
+                    <div class="card-footer">
+                        <a th:href="@{/category/{id}(id=${cat.id})}" class="btn btn-secondary btn-full">
+                            Voir les liens
+                            <svg class="btn-icon-right" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                <path d="M9 5l7 7-7 7"/>
+                            </svg>
+                        </a>
+                    </div>
+
+                </article>
+            </div>
+        </div>
+    </main>
+
+    <div id="addCategoryModal" class="modal">
+        <div class="modal-overlay" onclick="toggleModal('addCategoryModal')"></div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Nouvelle Catégorie</h2>
+                <button class="btn-icon-only" onclick="toggleModal('addCategoryModal')" aria-label="Fermer la modale">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <path d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                </button>
+            </div>
+            <form th:action="@{/category/add}" method="post" class="modal-form">
+                <div class="form-group">
+                    <label for="categoryName">Nom de la catégorie</label>
+                    <input type="text" id="categoryName" name="name" class="form-input" placeholder="Ex: Musique relaxante" required autofocus>
+                </div>
+                <div class="form-group">
+                    <label for="categoryDescription">Description</label>
+                    <textarea id="categoryDescription" name="description" class="form-textarea" placeholder="Description optionnelle..." rows="3"></textarea>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-secondary" onclick="toggleModal('addCategoryModal')">Annuler</button>
+                    <button type="submit" class="btn btn-primary">Créer</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="deleteCategoryModal" class="modal">
+        <div class="modal-overlay" onclick="toggleModal('deleteCategoryModal')"></div>
+        <div class="modal-content modal-sm">
+            <div class="modal-header">
+                <h3>Confirmer la suppression</h3>
+                <button class="modal-close" onclick="toggleModal('deleteCategoryModal')">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <path d="M18 6L6 18M6 6l12 12"/>
+                    </svg>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                <p>Êtes-vous sûr de vouloir supprimer cette catégorie ? Tous les liens associés seront également perdus. Cette action est irréversible.</p>
+            </div>
+
+            <form id="deleteCategoryForm" method="post" th:action="@{/category/{id}/delete(id='TEMP')}" class="modal-form">
+
+                <input type="hidden" id="deleteCategoryId" name="id" value="">
+
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-secondary" onclick="toggleModal('deleteCategoryModal')">Annuler</button>
+
+                    <button type="submit" class="btn btn-danger"
+                            onclick="document.getElementById('deleteCategoryForm').action = '/category/' + document.getElementById('deleteCategoryId').value + '/delete';">
+                        Supprimer
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script th:src="@{/js/main.js}"></script>
+</body>
+</html>

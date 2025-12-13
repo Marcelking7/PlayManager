@@ -1,0 +1,45 @@
+# -*- coding: utf-8 -*-
+import os
+
+# --- Configuration (Ajustée à la racine de 'css/') ---
+# Pour un fonctionnement optimal, placez-vous dans le dossier 'css/' pour exécuter ce script.
+BASE_DIR = os.getcwd()
+
+# Fichiers qui doivent être créés et remplis manuellement
+FILES_TO_CREATE = [
+    ('base', '_typography.css'),
+    ('layout', '_header.css'),
+    ('layout', '_main-content.css'),
+    ('components', '_forms.css'),
+    ('components', '_stats-bar.css'),
+]
+
+def create_missing_partials():
+    """Crée les fichiers partiels manquants dans la structure modulaire."""
+    print(f"Dossier de base pour la création : {BASE_DIR}\n")
+    print("Création des fichiers partiels (Partials) manquants...")
+
+    for folder, file in FILES_TO_CREATE:
+        folder_path = os.path.join(BASE_DIR, folder)
+        file_path = os.path.join(folder_path, file)
+
+        # S'assurer que le dossier existe
+        if not os.path.exists(folder_path):
+            os.makedirs(folder_path)
+
+        # Créer le fichier s'il n'existe pas, en spécifiant l'encodage
+        if not os.path.exists(file_path):
+            try:
+                # Utilisation de 'utf-8' explicite lors de l'écriture
+                with open(file_path, 'w', encoding='utf-8') as f:
+                    f.write(f"/* Styles pour le module '{file}' - Contenu à découper et coller ici. */\n")
+                print(f"  - Créé : {folder}/{file}")
+            except Exception as e:
+                print(f"  - ERREUR de création pour '{folder}/{file}': {e}")
+        else:
+            print(f"  - Fichier existe déjà, ignoré : {folder}/{file}")
+
+    print("\n✅ Création des fichiers vides terminée. Vous pouvez maintenant y coller votre CSS découpé.")
+
+if __name__ == "__main__":
+    create_missing_partials()
