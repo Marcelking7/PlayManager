@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tests - PlayManager</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" th:href="@{/css/base/_reset.css}">
+    <link rel="stylesheet" th:href="@{/css/base/_typography.css}">
+    <link rel="stylesheet" th:href="@{/css/base/_variables.css}">
+    <link rel="stylesheet" th:href="@{/css/components/_buttons.css}">
+    <link rel="stylesheet" th:href="@{/css/components/_cards.css}">
+    <link rel="stylesheet" th:href="@{/css/components/_forms.css}">
+    <link rel="stylesheet" th:href="@{/css/components/_notifications.css}">
+    <link rel="stylesheet" th:href="@{/css/layout/_app-layout.css}">
+    <link rel="stylesheet" th:href="@{/css/utilities/_responsive.css}">
+</head>
+<body>
+    <div class="app-container">
+        <header class="app-header">
+            <div class="header-content">
+                <h1 class="app-title">🧪 Tests PlayManager</h1>
+                <nav class="nav-links">
+                    <a href="/" class="nav-link">🏠 Application</a>
+                </nav>
+            </div>
+        </header>
+
+        <main class="main-content">
+            <div class="container">
+                <!-- Welcome Section -->
+                <div class="test-section">
+                    <h2>🧪 Environnement de Test</h2>
+                    <p>Cette section contient des pages de test indépendantes pour chaque fonctionnalité de PlayManager.
+                       Utilisez ces pages pour tester et valider les nouvelles fonctionnalités avant de les intégrer dans l'application principale.</p>
+                </div>
+
+                <!-- Test Modules Grid -->
+                <div class="test-modules-grid">
+                    <!-- Notifications Test -->
+                    <div class="test-module-card card">
+                        <div class="module-header">
+                            <div class="module-icon">🔔</div>
+                            <h3>Notifications</h3>
+                        </div>
+                        <div class="module-description">
+                            <p>Testez le système de notifications avec différents types (info, succès, avertissement, erreur).</p>
+                            <ul class="module-features">
+                                <li>Création de notifications</li>
+                                <li>Affichage en temps réel</li>
+                                <li>Suppression et gestion</li>
+                                <li>Test automatique</li>
+                            </ul>
+                        </div>
+                        <div class="module-actions">
+                            <a href="/test/notifications" class="btn btn-primary">Tester les Notifications</a>
+                        </div>
+                    </div>
+
+                    <!-- Events Test -->
+                    <div class="test-module-card card">
+                        <div class="module-header">
+                            <div class="module-icon">📅</div>
+                            <h3>Événements & Rappels</h3>
+                        </div>
+                        <div class="module-description">
+                            <p>Gérez les événements avec système de rappels automatique et notifications programmées.</p>
+                            <ul class="module-features">
+                                <li>Création d'événements</li>
+                                <li>Rappels automatiques</li>
+                                <li>Gestion des dates</li>
+                                <li>Vérification des rappels</li>
+                            </ul>
+                        </div>
+                        <div class="module-actions">
+                            <a href="/test/events" class="btn btn-primary">Tester les Événements</a>
+                        </div>
+                    </div>
+
+                    <!-- Images Test -->
+                    <div class="test-module-card card">
+                        <div class="module-header">
+                            <div class="module-icon">🖼️</div>
+                            <h3>Gestion d'Images</h3>
+                        </div>
+                        <div class="module-description">
+                            <p>Testez l'upload, l'affichage et la gestion des fichiers image avec validation.</p>
+                            <ul class="module-features">
+                                <li>Upload d'images</li>
+                                <li>Affichage en galerie</li>
+                                <li>Validation des formats</li>
+                                <li>Gestion des métadonnées</li>
+                            </ul>
+                        </div>
+                        <div class="module-actions">
+                            <a href="/test/images" class="btn btn-primary">Tester les Images</a>
+                        </div>
+                    </div>
+
+                    <!-- Sounds Test -->
+                    <div class="test-module-card card">
+                        <div class="module-header">
+                            <div class="module-icon">🔊</div>
+                            <h3>Gestion Audio</h3>
+                        </div>
+                        <div class="module-description">
+                            <p>Testez l'upload et la lecture de fichiers audio pour les notifications et événements.</p>
+                            <ul class="module-features">
+                                <li>Upload de sons</li>
+                                <li>Lecture audio intégrée</li>
+                                <li>Catégorisation par type</li>
+                                <li>Téléchargement</li>
+                            </ul>
+                        </div>
+                        <div class="module-actions">
+                            <a href="/test/sounds" class="btn btn-primary">Tester les Sons</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- System Status -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3>📊 État du Système</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="system-status">
+                            <div class="status-item">
+                                <span class="status-label">Java Version:</span>
+                                <span class="status-value">17.0.16</span>
+                            </div>
+                            <div class="status-item">
+                                <span class="status-label">Spring Boot:</span>
+                                <span class="status-value">3.4.0</span>
+                            </div>
+                            <div class="status-item">
+                                <span class="status-label">Base de données:</span>
+                                <span class="status-value">H2/MySQL</span>
+                            </div>
+                            <div class="status-item">
+                                <span class="status-label">WebSocket:</span>
+                                <span class="status-value">Activé</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Actions -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3>⚡ Actions Rapides</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="quick-actions">
+                            <button onclick="clearAllTestData()" class="btn btn-warning">Vider Toutes les Données de Test</button>
+                            <button onclick="showSystemInfo()" class="btn btn-info">Informations Système</button>
+                            <a href="/" class="btn btn-secondary">Retour à l'Application</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script th:src="@{/js/main.js}"></script>
+    <script>
+        function clearAllTestData() {
+            if (confirm('Êtes-vous sûr de vouloir supprimer TOUTES les données de test ? Cette action est irréversible.')) {
+                // Clear notifications
+                fetch('/test/notifications/clear', { method: 'POST' })
+                    .then(() => console.log('Notifications cleared'))
+                    .catch(err => console.error('Error clearing notifications:', err));
+
+                // Clear events
+                fetch('/test/events/clear', { method: 'POST' })
+                    .then(() => console.log('Events cleared'))
+                    .catch(err => console.error('Error clearing events:', err));
+
+                // Clear images
+                fetch('/test/images/clear', { method: 'POST' })
+                    .then(() => console.log('Images cleared'))
+                    .catch(err => console.error('Error clearing images:', err));
+
+                // Clear sounds
+                fetch('/test/sounds/clear', { method: 'POST' })
+                    .then(() => console.log('Sounds cleared'))
+                    .catch(err => console.error('Error clearing sounds:', err));
+
+                setTimeout(() => {
+                    alert('Toutes les données de test ont été supprimées !');
+                }, 1000);
+            }
+        }
+
+        function showSystemInfo() {
+            const info = `
+Informations Système:
+• Java: 17.0.16 (Eclipse Temurin)
+• Spring Boot: 3.4.0
+• Base de données: H2 (en mémoire) / MySQL
+• WebSocket: Activé
+• Upload: Configuré (images: 5MB, sons: 10MB)
+
+URLs de test:
+• Notifications: /test/notifications
+• Événements: /test/events
+• Images: /test/images
+• Sons: /test/sounds
+            `;
+            alert(info);
+        }
+
+        // Add some visual enhancements
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add hover effects to test module cards
+            const cards = document.querySelectorAll('.test-module-card');
+            cards.forEach(card => {
+                card.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-5px)';
+                    this.style.boxShadow = '0 8px 25px rgba(0,0,0,0.15)';
+                });
+
+                card.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0)';
+                    this.style.boxShadow = '0 4px 15px rgba(0,0,0,0.1)';
+                });
+            });
+        });
+    </script>
+
+    <style>
+        .test-modules-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .test-module-card {
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .test-module-card:hover {
+            border-color: var(--primary-color);
+        }
+
+        .module-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .module-icon {
+            font-size: 2rem;
+        }
+
+        .module-description {
+            margin-bottom: 1.5rem;
+        }
+
+        .module-features {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .module-features li {
+            padding: 0.25rem 0;
+            position: relative;
+            padding-left: 1.5rem;
+        }
+
+        .module-features li:before {
+            content: "✓";
+            color: var(--success-color);
+            font-weight: bold;
+            position: absolute;
+            left: 0;
+        }
+
+        .module-actions {
+            margin-top: 1.5rem;
+        }
+
+        .system-status {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .status-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem;
+            background: var(--light-bg);
+            border-radius: 4px;
+        }
+
+        .status-label {
+            font-weight: 500;
+        }
+
+        .status-value {
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+
+        .quick-actions {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        @media (max-width: 768px) {
+            .test-modules-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .system-status {
+                grid-template-columns: 1fr;
+            }
+
+            .quick-actions {
+                flex-direction: column;
+            }
+        }
+    </style>
+</body>
+</html>

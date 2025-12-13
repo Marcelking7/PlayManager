@@ -39,7 +39,10 @@ public class PlaylistMapper {
         link.setTitle(dto.getTitle());
         link.setUrl(dto.getUrl());
         link.setPlatform(dto.getPlatform());
-        link.setCreatedAt(dto.getCreatedAt());
+        // Preserve entity default timestamp if DTO doesn't provide one
+        if (dto.getCreatedAt() != null) {
+            link.setCreatedAt(dto.getCreatedAt());
+        }
         return link;
     }
 

@@ -5,11 +5,50 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gestionnaire de Playlists</title>
     <link rel="stylesheet" th:href="@{/css/style.css}">
+    <!-- CSRF meta for JS usage -->
+    <meta name="_csrf" th:content="${_csrf.token}" />
+    <meta name="_csrf_header" th:content="${_csrf.headerName}" />
 </head>
 <body>
 <div class="app-container">
+    <aside class="sidebar">
+        <nav class="sidebar-nav">
+            <a href="#" class="nav-item" data-tooltip="Accueil" th:href="@{/}">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+                </svg>
+            </a>
+            <a href="#" class="nav-item" data-tooltip="Catégories" th:href="@{/}">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <path d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/>
+                </svg>
+            </a>
+            <a href="#" class="nav-item" data-tooltip="Paramètres">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <path d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
+                    <path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                </svg>
+            </a>
+            <a href="#" class="nav-item" data-tooltip="Notifications">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <path d="M15 17h5l-5 5v-5z"/>
+                    <path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/>
+                    <path d="M13.73 21a2 2 0 01-3.46 0"/>
+                </svg>
+            </a>
+        </nav>
+    </aside>
+    <div th:if="${flashMessage}" class="flash-notification" th:classappend="${flashType ?: 'info'}">
+        <span th:text="${flashMessage}"></span>
+        <button onclick="this.parentElement.style.display='none'">×</button>
+    </div>
     <header class="app-header">
         <div class="header-content">
+            <button class="sidebar-toggle" onclick="toggleSidebar()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <path d="M4 6h16M4 12h16M4 18h16"/>
+                </svg>
+            </button>
             <div class="logo">
                 <svg class="logo-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
                     <path d="M3 7V17C3 18.1046 3.89543 19 5 19H19C20.1046 19 21 18.1046 21 17V7M3 7L12 2L21 7M3 7L12 12M21 7L12 12M12 12V22"/>
@@ -99,6 +138,7 @@
                 </button>
             </div>
             <form th:action="@{/category/add}" method="post" class="modal-form">
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
                 <div class="form-group">
                     <label for="categoryName">Nom de la catégorie</label>
                     <input type="text" id="categoryName" name="name" class="form-input" placeholder="Ex: Musique relaxante" required autofocus>
@@ -132,6 +172,7 @@
             </div>
 
             <form id="deleteCategoryForm" method="post" th:action="@{/category/{id}/delete(id='TEMP')}" class="modal-form">
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
 
                 <input type="hidden" id="deleteCategoryId" name="id" value="">
 

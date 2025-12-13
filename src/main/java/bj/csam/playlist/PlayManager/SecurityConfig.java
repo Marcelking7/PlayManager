@@ -28,6 +28,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorize -> authorize
                         // Autoriser l'accès aux ressources statiques (CSS, JS, images, etc.)
                         .requestMatchers("/css/**", "/js/**", "/images/**").permitAll()
+                        // Autoriser la console H2 en dev
+                        .requestMatchers("/h2-console/**").permitAll()
                         // Toutes les autres requêtes nécessitent une authentification.
                         .anyRequest().authenticated()
                 )
@@ -36,6 +38,9 @@ public class SecurityConfig {
 
                 // Laisse Spring Security gérer la déconnexion (URL /logout)
                 .logout(Customizer.withDefaults());
+
+        // Autoriser l'affichage en iframe pour H2 Console
+        http.headers(headers -> headers.frameOptions(frame -> frame.sameOrigin()));
 
         return http.build();
     }

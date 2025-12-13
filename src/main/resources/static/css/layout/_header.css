@@ -23,6 +23,33 @@
     align-items: center;
     justify-content: space-between;
     gap: 2rem;
+    margin-left: 60px; /* Account for sidebar */
+}
+
+.sidebar-toggle {
+    display: none;
+    background: none;
+    border: none;
+    color: var(--color-text);
+    font-size: 24px;
+    cursor: pointer;
+    padding: 10px;
+    border-radius: 4px;
+    transition: background 0.3s ease;
+}
+
+.sidebar-toggle:hover {
+    background: var(--color-border);
+}
+
+@media (max-width: 768px) {
+    .header-content {
+        margin-left: 0;
+    }
+
+    .sidebar-toggle {
+        display: block;
+    }
 }
 
 .logo {

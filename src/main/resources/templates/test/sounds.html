@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Sons - PlayManager</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" th:href="@{/css/base/_reset.css}">
+    <link rel="stylesheet" th:href="@{/css/base/_typography.css}">
+    <link rel="stylesheet" th:href="@{/css/base/_variables.css}">
+    <link rel="stylesheet" th:href="@{/css/components/_buttons.css}">
+    <link rel="stylesheet" th:href="@{/css/components/_cards.css}">
+    <link rel="stylesheet" th:href="@{/css/components/_forms.css}">
+    <link rel="stylesheet" th:href="@{/css/components/_notifications.css}">
+    <link rel="stylesheet" th:href="@{/css/layout/_app-layout.css}">
+    <link rel="stylesheet" th:href="@{/css/utilities/_responsive.css}">
+</head>
+<body>
+    <div class="app-container">
+        <header class="app-header">
+            <div class="header-content">
+                <h1 class="app-title">🔊 Test Sons</h1>
+                <nav class="nav-links">
+                    <a href="/test" class="nav-link">🏠 Accueil Test</a>
+                    <a href="/test/notifications" class="nav-link">🔔 Notifications</a>
+                    <a href="/test/events" class="nav-link">📅 Événements</a>
+                    <a href="/test/images" class="nav-link">🖼️ Images</a>
+                </nav>
+            </div>
+        </header>
+
+        <main class="main-content">
+            <div class="container">
+                <!-- Flash Messages -->
+                <div th:if="${flashMessage}" class="flash-notification" th:classappend="${flashType != null ? flashType : 'info'}">
+                    <span th:text="${flashMessage}"></span>
+                    <button type="button" class="flash-close" onclick="this.parentElement.style.display='none'">×</button>
+                </div>
+
+                <!-- Test Section -->
+                <div class="test-section">
+                    <h2>🧪 Test de Gestion des Sons</h2>
+                    <p>Cette page permet de tester l'upload, l'écoute et la gestion des fichiers audio indépendamment.</p>
+                </div>
+
+                <!-- Upload Sound Form -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3>⬆️ Uploader un Son</h3>
+                    </div>
+                    <div class="card-body">
+                        <form th:action="@{/test/sounds/upload}" method="post" enctype="multipart/form-data" class="form">
+                            <div class="form-group">
+                                <label for="file">Sélectionner un fichier audio:</label>
+                                <input type="file" id="file" name="file" class="form-control" accept="audio/*" required>
+                                <small class="form-text">Formats acceptés: MP3, WAV, OGG, AAC (Max: 10MB)</small>
+                            </div>
+                            <div class="form-group">
+                                <label for="title">Titre (optionnel):</label>
+                                <input type="text" id="title" name="title" class="form-control" placeholder="Titre du son...">
+                            </div>
+                            <div class="form-group">
+                                <label for="description">Description (optionnel):</label>
+                                <textarea id="description" name="description" class="form-control" rows="2" placeholder="Description du son..."></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="eventType">Type d'événement:</label>
+                                <select id="eventType" name="eventType" class="form-control">
+                                    <option value="notification">Notification</option>
+                                    <option value="alarm">Alarme</option>
+                                    <option value="reminder">Rappel</option>
+                                    <option value="music">Musique</option>
+                                    <option value="other">Autre</option>
+                                </select>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Uploader le Son</button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Sounds List -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3>🔊 Bibliothèque Audio</h3>
+                    </div>
+                    <div class="card-body">
+                        <div th:if="${sounds != null and !sounds.empty}" class="sounds-list">
+                            <div th:each="sound : ${sounds}" class="sound-item card">
+                                <div class="sound-info">
+                                    <h4 th:if="${sound.title}" th:text="${sound.title}"></h4>
+                                    <p th:if="${sound.description}" th:text="${sound.description}"></p>
+                                    <div class="sound-meta">
+                                        <span class="sound-type" th:text="'Type: ' + ${sound.eventType}"></span>
+                                        <span class="sound-size" th:text="'Taille: ' + ${sound.size} + ' bytes'"></span>
+                                        <span class="sound-format" th:text="'Format: ' + ${sound.contentType}"></span>
+                                        <span class="sound-date" th:text="'Upload: ' + ${#temporals.format(sound.createdAt, 'dd/MM/yyyy HH:mm')}"></span>
+                                    </div>
+                                </div>
+                                <div class="sound-player">
+                                    <audio controls class="audio-player">
+                                        <source th:src="'/sounds/' + ${sound.filename}" th:type="${sound.contentType}">
+                                        Votre navigateur ne supporte pas l'élément audio.
+                                    </audio>
+                                </div>
+                                <div class="sound-actions">
+                                    <a th:href="'/sounds/' + ${sound.filename}" download class="btn btn-sm btn-info">⬇️ Télécharger</a>
+                                    <form th:action="@{/test/sounds/delete/{id}(id=${sound.id})}" method="post" style="display: inline;">
+                                        <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Supprimer ce son ?')">🗑️</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        <div th:if="${sounds == null or sounds.empty}" class="empty-state">
+                            <div class="empty-state-icon">🔊</div>
+                            <div class="empty-state-text">Aucun son trouvé</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Test Actions -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3>🧪 Actions de Test</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="test-actions">
+                            <button onclick="clearAllSounds()" class="btn btn-warning">Vider Tous les Sons</button>
+                            <button onclick="testAudioPlayback()" class="btn btn-info">Tester la Lecture Audio</button>
+                            <button onclick="testSoundValidation()" class="btn btn-secondary">Tester la Validation</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script th:src="@{/js/main.js}"></script>
+    <script>
+        function clearAllSounds() {
+            if (confirm('Êtes-vous sûr de vouloir supprimer tous les sons ?')) {
+                fetch('/test/sounds/clear', {
+                    method: 'POST'
+                }).then(() => {
+                    window.location.reload();
+                });
+            }
+        }
+
+        function testAudioPlayback() {
+            const audioElements = document.querySelectorAll('.audio-player');
+            if (audioElements.length === 0) {
+                alert('Aucun fichier audio trouvé pour le test');
+                return;
+            }
+
+            alert('Test de lecture audio - Les contrôles audio sont disponibles pour chaque fichier');
+        }
+
+        function testSoundValidation() {
+            alert('Test de validation audio - Fonctionnalité à implémenter');
+        }
+
+        // Preview audio info before upload
+        document.getElementById('file').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                // Check file size (10MB limit)
+                if (file.size > 10 * 1024 * 1024) {
+                    alert('Le fichier est trop volumineux. Taille maximale: 10MB');
+                    e.target.value = '';
+                    return;
+                }
+
+                // Check file type
+                if (!file.type.startsWith('audio/')) {
+                    alert('Veuillez sélectionner un fichier audio valide.');
+                    e.target.value = '';
+                    return;
+                }
+
+                // Show file info
+                const titleInput = document.getElementById('title');
+                if (!titleInput.value) {
+                    titleInput.value = file.name.replace(/\.[^/.]+$/, "");
+                }
+
+                // Show audio duration if possible
+                const audio = new Audio();
+                audio.addEventListener('loadedmetadata', function() {
+                    const duration = Math.round(audio.duration);
+                    console.log('Durée du fichier audio:', duration, 'secondes');
+                });
+                audio.src = URL.createObjectURL(file);
+            }
+        });
+    </script>
+</body>
+</html>

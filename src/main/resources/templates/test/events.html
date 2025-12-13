@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Événements - PlayManager</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" th:href="@{/css/base/_reset.css}">
+    <link rel="stylesheet" th:href="@{/css/base/_typography.css}">
+    <link rel="stylesheet" th:href="@{/css/base/_variables.css}">
+    <link rel="stylesheet" th:href="@{/css/components/_buttons.css}">
+    <link rel="stylesheet" th:href="@{/css/components/_cards.css}">
+    <link rel="stylesheet" th:href="@{/css/components/_forms.css}">
+    <link rel="stylesheet" th:href="@{/css/components/_notifications.css}">
+    <link rel="stylesheet" th:href="@{/css/layout/_app-layout.css}">
+    <link rel="stylesheet" th:href="@{/css/utilities/_responsive.css}">
+</head>
+<body>
+    <div class="app-container">
+        <header class="app-header">
+            <div class="header-content">
+                <h1 class="app-title">📅 Test Événements</h1>
+                <nav class="nav-links">
+                    <a href="/test" class="nav-link">🏠 Accueil Test</a>
+                    <a href="/test/notifications" class="nav-link">🔔 Notifications</a>
+                    <a href="/test/images" class="nav-link">🖼️ Images</a>
+                    <a href="/test/sounds" class="nav-link">🔊 Sons</a>
+                </nav>
+            </div>
+        </header>
+
+        <main class="main-content">
+            <div class="container">
+                <!-- Flash Messages -->
+                <div th:if="${flashMessage}" class="flash-notification" th:classappend="${flashType != null ? flashType : 'info'}">
+                    <span th:text="${flashMessage}"></span>
+                    <button type="button" class="flash-close" onclick="this.parentElement.style.display='none'">×</button>
+                </div>
+
+                <!-- Test Section -->
+                <div class="test-section">
+                    <h2>🧪 Test des Événements</h2>
+                    <p>Cette page permet de tester les fonctionnalités d'événements et de rappels indépendamment.</p>
+                </div>
+
+                <!-- Create Event Form -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3>➕ Créer un Événement</h3>
+                    </div>
+                    <div class="card-body">
+                        <form th:action="@{/test/events/create}" method="post" class="form">
+                            <div class="form-group">
+                                <label for="title">Titre:</label>
+                                <input type="text" id="title" name="title" class="form-control" placeholder="Titre de l'événement..." required>
+                            </div>
+                            <div class="form-group">
+                                <label for="description">Description:</label>
+                                <textarea id="description" name="description" class="form-control" rows="3" placeholder="Description de l'événement..."></textarea>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="eventDate">Date de l'événement:</label>
+                                    <input type="datetime-local" id="eventDate" name="eventDate" class="form-control" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="reminderDate">Date du rappel:</label>
+                                    <input type="datetime-local" id="reminderDate" name="reminderDate" class="form-control">
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Créer Événement</button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Events List -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3>📋 Liste des Événements</h3>
+                    </div>
+                    <div class="card-body">
+                        <div th:if="${events != null and !events.empty}" class="events-list">
+                            <div th:each="event : ${events}" class="event-item card">
+                                <div class="event-content">
+                                    <h4 th:text="${event.title}"></h4>
+                                    <p th:text="${event.description}"></p>
+                                    <div class="event-meta">
+                                        <span class="event-date">📅 <span th:text="${#temporals.format(event.eventDate, 'dd/MM/yyyy HH:mm')}"></span></span>
+                                        <span th:if="${event.reminderDate}" class="event-reminder">⏰ Rappel: <span th:text="${#temporals.format(event.reminderDate, 'dd/MM/yyyy HH:mm')}"></span></span>
+                                        <span th:if="${event.reminderSent}" class="event-status reminder-sent">✅ Rappel envoyé</span>
+                                        <span th:unless="${event.reminderSent}" class="event-status reminder-pending">⏳ En attente</span>
+                                    </div>
+                                </div>
+                                <div class="event-actions">
+                                    <form th:action="@{/test/events/delete/{id}(id=${event.id})}" method="post" style="display: inline;">
+                                        <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Supprimer cet événement ?')">🗑️</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        <div th:if="${events == null or events.empty}" class="empty-state">
+                            <div class="empty-state-icon">📅</div>
+                            <div class="empty-state-text">Aucun événement trouvé</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Test Actions -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3>🧪 Actions de Test</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="test-actions">
+                            <button onclick="createTestEvents()" class="btn btn-secondary">Créer Événements de Test</button>
+                            <button onclick="clearAllEvents()" class="btn btn-warning">Vider Tous les Événements</button>
+                            <button onclick="checkReminders()" class="btn btn-info">Vérifier les Rappels</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script th:src="@{/js/main.js}"></script>
+    <script>
+        function createTestEvents() {
+            const events = [
+                {
+                    title: "Concert Rock",
+                    description: "Concert de musique rock au stade municipal",
+                    eventDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().slice(0, 16), // Dans 7 jours
+                    reminderDate: new Date(Date.now() + 6 * 24 * 60 * 60 * 1000).toISOString().slice(0, 16) // 1 jour avant
+                },
+                {
+                    title: "Réunion d'équipe",
+                    description: "Réunion hebdomadaire de l'équipe de développement",
+                    eventDate: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000).toISOString().slice(0, 16), // Dans 2 jours
+                    reminderDate: new Date(Date.now() + 1 * 24 * 60 * 60 * 1000).toISOString().slice(0, 16) // 1 jour avant
+                }
+            ];
+
+            events.forEach((event, index) => {
+                setTimeout(() => {
+                    const formData = new URLSearchParams();
+                    formData.append('title', event.title);
+                    formData.append('description', event.description);
+                    formData.append('eventDate', event.eventDate);
+                    formData.append('reminderDate', event.reminderDate);
+
+                    fetch('/test/events/create', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded',
+                        },
+                        body: formData
+                    }).then(() => {
+                        if (index === events.length - 1) {
+                            window.location.reload();
+                        }
+                    });
+                }, index * 500);
+            });
+        }
+
+        function clearAllEvents() {
+            if (confirm('Êtes-vous sûr de vouloir supprimer tous les événements ?')) {
+                fetch('/test/events/clear', {
+                    method: 'POST'
+                }).then(() => {
+                    window.location.reload();
+                });
+            }
+        }
+
+        function checkReminders() {
+            fetch('/test/events/check-reminders', {
+                method: 'POST'
+            }).then(response => response.text())
+            .then(message => {
+                alert(message);
+                window.location.reload();
+            });
+        }
+    </script>
+</body>
+</html>

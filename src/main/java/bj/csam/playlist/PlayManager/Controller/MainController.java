@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 @RequiredArgsConstructor
@@ -18,10 +19,7 @@ public class MainController {
 
 
 
-        @GetMapping("/login")
-        public String login() {
-            return "login";
-        }
+        // Login page handled by Spring Security default login form.
 
 
     @GetMapping("/")
@@ -31,8 +29,10 @@ public class MainController {
     }
 
     @PostMapping("/category/add")
-    public String addCategory(@ModelAttribute CategoryDto categoryDto) {
+    public String addCategory(@ModelAttribute CategoryDto categoryDto, RedirectAttributes ra) {
         categoryService.save(categoryDto);
+        ra.addFlashAttribute("flashMessage", "Catégorie ajoutée avec succès");
+        ra.addFlashAttribute("flashType", "success");
         return "redirect:/";
     }
 
@@ -48,21 +48,27 @@ public class MainController {
     }
 
     @PostMapping("/category/{id}/delete")
-    public String deleteCategory(@PathVariable Long id) {
+    public String deleteCategory(@PathVariable Long id, RedirectAttributes ra) {
         categoryService.deleteById(id);
+        ra.addFlashAttribute("flashMessage", "Catégorie supprimée avec succès");
+        ra.addFlashAttribute("flashType", "success");
         return "redirect:/";
     }
 
     @PostMapping("/link/add")
-    public String addLink(@RequestParam Long categoryId, @ModelAttribute PlaylistDto linkDTO) {
+    public String addLink(@RequestParam Long categoryId, @ModelAttribute PlaylistDto linkDTO, RedirectAttributes ra) {
         linkDTO.setCategoryId(categoryId);
         linkService.save(linkDTO);
+        ra.addFlashAttribute("flashMessage", "Lien ajouté avec succès");
+        ra.addFlashAttribute("flashType", "success");
         return "redirect:/category/" + categoryId;
     }
 
     @PostMapping("/link/{id}/delete")
-    public String deleteLink(@PathVariable Long id, @RequestParam Long categoryId) {
+    public String deleteLink(@PathVariable Long id, @RequestParam Long categoryId, RedirectAttributes ra) {
         linkService.deleteById(id);
+        ra.addFlashAttribute("flashMessage", "Lien supprimé avec succès");
+        ra.addFlashAttribute("flashType", "success");
         return "redirect:/category/" + categoryId;
     }
 }

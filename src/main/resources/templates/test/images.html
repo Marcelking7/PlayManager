@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Images - PlayManager</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" th:href="@{/css/base/_reset.css}">
+    <link rel="stylesheet" th:href="@{/css/base/_typography.css}">
+    <link rel="stylesheet" th:href="@{/css/base/_variables.css}">
+    <link rel="stylesheet" th:href="@{/css/components/_buttons.css}">
+    <link rel="stylesheet" th:href="@{/css/components/_cards.css}">
+    <link rel="stylesheet" th:href="@{/css/components/_forms.css}">
+    <link rel="stylesheet" th:href="@{/css/components/_notifications.css}">
+    <link rel="stylesheet" th:href="@{/css/layout/_app-layout.css}">
+    <link rel="stylesheet" th:href="@{/css/utilities/_responsive.css}">
+</head>
+<body>
+    <div class="app-container">
+        <header class="app-header">
+            <div class="header-content">
+                <h1 class="app-title">🖼️ Test Images</h1>
+                <nav class="nav-links">
+                    <a href="/test" class="nav-link">🏠 Accueil Test</a>
+                    <a href="/test/notifications" class="nav-link">🔔 Notifications</a>
+                    <a href="/test/events" class="nav-link">📅 Événements</a>
+                    <a href="/test/sounds" class="nav-link">🔊 Sons</a>
+                </nav>
+            </div>
+        </header>
+
+        <main class="main-content">
+            <div class="container">
+                <!-- Flash Messages -->
+                <div th:if="${flashMessage}" class="flash-notification" th:classappend="${flashType != null ? flashType : 'info'}">
+                    <span th:text="${flashMessage}"></span>
+                    <button type="button" class="flash-close" onclick="this.parentElement.style.display='none'">×</button>
+                </div>
+
+                <!-- Test Section -->
+                <div class="test-section">
+                    <h2>🧪 Test de Gestion des Images</h2>
+                    <p>Cette page permet de tester l'upload, l'affichage et la gestion des images indépendamment.</p>
+                </div>
+
+                <!-- Upload Image Form -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3>⬆️ Uploader une Image</h3>
+                    </div>
+                    <div class="card-body">
+                        <form th:action="@{/test/images/upload}" method="post" enctype="multipart/form-data" class="form">
+                            <div class="form-group">
+                                <label for="file">Sélectionner une image:</label>
+                                <input type="file" id="file" name="file" class="form-control" accept="image/*" required>
+                                <small class="form-text">Formats acceptés: JPG, PNG, GIF, WebP (Max: 5MB)</small>
+                            </div>
+                            <div class="form-group">
+                                <label for="title">Titre (optionnel):</label>
+                                <input type="text" id="title" name="title" class="form-control" placeholder="Titre de l'image...">
+                            </div>
+                            <div class="form-group">
+                                <label for="description">Description (optionnel):</label>
+                                <textarea id="description" name="description" class="form-control" rows="2" placeholder="Description de l'image..."></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Uploader l'Image</button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Images Gallery -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3>🖼️ Galerie d'Images</h3>
+                    </div>
+                    <div class="card-body">
+                        <div th:if="${images != null and !images.empty}" class="images-gallery">
+                            <div th:each="image : ${images}" class="image-item card">
+                                <div class="image-preview">
+                                    <img th:src="'/images/' + ${image.filename}" alt="Image" class="image-thumb">
+                                </div>
+                                <div class="image-info">
+                                    <h4 th:if="${image.title}" th:text="${image.title}"></h4>
+                                    <p th:if="${image.description}" th:text="${image.description}"></p>
+                                    <div class="image-meta">
+                                        <span class="image-size" th:text="'Taille: ' + ${image.size} + ' bytes'"></span>
+                                        <span class="image-type" th:text="'Type: ' + ${image.contentType}"></span>
+                                        <span class="image-date" th:text="'Upload: ' + ${#temporals.format(image.createdAt, 'dd/MM/yyyy HH:mm')}"></span>
+                                    </div>
+                                </div>
+                                <div class="image-actions">
+                                    <a th:href="'/images/' + ${image.filename}" target="_blank" class="btn btn-sm btn-info">👁️ Voir</a>
+                                    <form th:action="@{/test/images/delete/{id}(id=${image.id})}" method="post" style="display: inline;">
+                                        <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Supprimer cette image ?')">🗑️</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        <div th:if="${images == null or images.empty}" class="empty-state">
+                            <div class="empty-state-icon">🖼️</div>
+                            <div class="empty-state-text">Aucune image trouvée</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Test Actions -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3>🧪 Actions de Test</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="test-actions">
+                            <button onclick="clearAllImages()" class="btn btn-warning">Vider Toutes les Images</button>
+                            <button onclick="testImageValidation()" class="btn btn-info">Tester la Validation</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script th:src="@{/js/main.js}"></script>
+    <script>
+        function clearAllImages() {
+            if (confirm('Êtes-vous sûr de vouloir supprimer toutes les images ?')) {
+                fetch('/test/images/clear', {
+                    method: 'POST'
+                }).then(() => {
+                    window.location.reload();
+                });
+            }
+        }
+
+        function testImageValidation() {
+            alert('Test de validation d\'image - Fonctionnalité à implémenter');
+        }
+
+        // Preview image before upload
+        document.getElementById('file').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                // Check file size (5MB limit)
+                if (file.size > 5 * 1024 * 1024) {
+                    alert('Le fichier est trop volumineux. Taille maximale: 5MB');
+                    e.target.value = '';
+                    return;
+                }
+
+                // Check file type
+                if (!file.type.startsWith('image/')) {
+                    alert('Veuillez sélectionner un fichier image valide.');
+                    e.target.value = '';
+                    return;
+                }
+
+                // Show file info
+                const titleInput = document.getElementById('title');
+                if (!titleInput.value) {
+                    titleInput.value = file.name.replace(/\.[^/.]+$/, "");
+                }
+            }
+        });
+    </script>
+</body>
+</html>

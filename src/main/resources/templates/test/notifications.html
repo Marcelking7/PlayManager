@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Notifications - PlayManager</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" th:href="@{/css/base/_reset.css}">
+    <link rel="stylesheet" th:href="@{/css/base/_typography.css}">
+    <link rel="stylesheet" th:href="@{/css/base/_variables.css}">
+    <link rel="stylesheet" th:href="@{/css/components/_buttons.css}">
+    <link rel="stylesheet" th:href="@{/css/components/_cards.css}">
+    <link rel="stylesheet" th:href="@{/css/components/_forms.css}">
+    <link rel="stylesheet" th:href="@{/css/components/_notifications.css}">
+    <link rel="stylesheet" th:href="@{/css/layout/_app-layout.css}">
+    <link rel="stylesheet" th:href="@{/css/utilities/_responsive.css}">
+</head>
+<body>
+    <div class="app-container">
+        <header class="app-header">
+            <div class="header-content">
+                <h1 class="app-title">🔔 Test Notifications</h1>
+                <nav class="nav-links">
+                    <a href="/test" class="nav-link">🏠 Accueil Test</a>
+                    <a href="/test/events" class="nav-link">📅 Événements</a>
+                    <a href="/test/images" class="nav-link">🖼️ Images</a>
+                    <a href="/test/sounds" class="nav-link">🔊 Sons</a>
+                </nav>
+            </div>
+        </header>
+
+        <main class="main-content">
+            <div class="container">
+                <!-- Flash Messages -->
+                <div th:if="${flashMessage}" class="flash-notification" th:classappend="${flashType != null ? flashType : 'info'}">
+                    <span th:text="${flashMessage}"></span>
+                    <button type="button" class="flash-close" onclick="this.parentElement.style.display='none'">×</button>
+                </div>
+
+                <!-- Test Section -->
+                <div class="test-section">
+                    <h2>🧪 Test des Notifications</h2>
+                    <p>Cette page permet de tester les fonctionnalités de notifications indépendamment.</p>
+                </div>
+
+                <!-- Create Notification Form -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3>➕ Créer une Notification</h3>
+                    </div>
+                    <div class="card-body">
+                        <form th:action="@{/test/notifications/create}" method="post" class="form">
+                            <div class="form-group">
+                                <label for="message">Message:</label>
+                                <textarea id="message" name="message" class="form-control" rows="3" placeholder="Entrez le message de la notification..." required></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="type">Type:</label>
+                                <select id="type" name="type" class="form-control">
+                                    <option value="info">ℹ️ Info</option>
+                                    <option value="success">✅ Succès</option>
+                                    <option value="warning">⚠️ Avertissement</option>
+                                    <option value="error">❌ Erreur</option>
+                                </select>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Créer Notification</button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Notifications List -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3>📋 Liste des Notifications</h3>
+                    </div>
+                    <div class="card-body">
+                        <div th:if="${notifications != null and !notifications.empty}" class="notifications-list">
+                            <div th:each="notification : ${notifications}" class="notification-item"
+                                 th:classappend="'notification-' + ${notification.type}">
+                                <div class="notification-content">
+                                    <div class="notification-message" th:text="${notification.message}"></div>
+                                    <div class="notification-meta">
+                                        <span class="notification-type" th:text="'Type: ' + ${notification.type}"></span>
+                                        <span class="notification-date" th:text="'Créé: ' + ${#temporals.format(notification.createdAt, 'dd/MM/yyyy HH:mm')}"></span>
+                                    </div>
+                                </div>
+                                <div class="notification-actions">
+                                    <form th:action="@{/test/notifications/delete/{id}(id=${notification.id})}" method="post" style="display: inline;">
+                                        <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Supprimer cette notification ?')">🗑️</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        <div th:if="${notifications == null or notifications.empty}" class="empty-state">
+                            <div class="empty-state-icon">📭</div>
+                            <div class="empty-state-text">Aucune notification trouvée</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Test Actions -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3>🧪 Actions de Test</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="test-actions">
+                            <button onclick="createTestNotifications()" class="btn btn-secondary">Créer Notifications de Test</button>
+                            <button onclick="clearAllNotifications()" class="btn btn-warning">Vider Toutes les Notifications</button>
+                            <button onclick="testWebSocket()" class="btn btn-info">Tester WebSocket</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script th:src="@{/js/main.js}"></script>
+    <script>
+        function createTestNotifications() {
+            const notifications = [
+                { message: "Bienvenue dans le système de notifications !", type: "info" },
+                { message: "Opération réalisée avec succès", type: "success" },
+                { message: "Attention : vérifiez vos données", type: "warning" },
+                { message: "Erreur lors du traitement", type: "error" }
+            ];
+
+            notifications.forEach((notif, index) => {
+                setTimeout(() => {
+                    fetch('/test/notifications/create', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded',
+                        },
+                        body: `message=${encodeURIComponent(notif.message)}&type=${notif.type}`
+                    }).then(() => {
+                        if (index === notifications.length - 1) {
+                            window.location.reload();
+                        }
+                    });
+                }, index * 500);
+            });
+        }
+
+        function clearAllNotifications() {
+            if (confirm('Êtes-vous sûr de vouloir supprimer toutes les notifications ?')) {
+                fetch('/test/notifications/clear', {
+                    method: 'POST'
+                }).then(() => {
+                    window.location.reload();
+                });
+            }
+        }
+
+        function testWebSocket() {
+            alert('WebSocket test - Fonctionnalité à implémenter');
+        }
+    </script>
+</body>
+</html>

@@ -40,7 +40,7 @@ gap: 1rem;
 }
 
 .link-card {
-background: var(--color-surface);
+background: linear-gradient(135deg, #f093fb 0%, #f5576c 50%, #4facfe 100%);
 border-radius: var(--radius-lg);
 padding: 1.5rem;
 box-shadow: var(--shadow-sm);
@@ -49,6 +49,7 @@ display: flex;
 gap: 1.25rem;
 align-items: flex-start;
 transition: all var(--transition-base);
+color: white;
 }
 
 .link-card:hover {
@@ -78,18 +79,18 @@ stroke-width: 2;
 }
 
 .platform-youtube {
-background: #fee;
-color: #c00;
+background: rgba(255,255,255,0.2);
+color: white;
 }
 
 .platform-spotify {
-background: #efe;
-color: #1db954;
+background: rgba(255,255,255,0.2);
+color: white;
 }
 
 .platform-facebook {
-background: #eef;
-color: #1877f2;
+background: rgba(255,255,255,0.2);
+color: white;
 }
 
 .link-content {
@@ -100,7 +101,7 @@ min-width: 0;
 .link-content h3 {
 font-size: 1.125rem;
 font-weight: 600;
-color: var(--color-text);
+color: white;
 margin-bottom: 0.5rem;
 }
 
@@ -108,7 +109,7 @@ margin-bottom: 0.5rem;
 display: inline-flex;
 align-items: center;
 gap: 0.5rem;
-color: var(--color-primary);
+color: rgba(255,255,255,0.8);
 text-decoration: none;
 font-size: 0.875rem;
 word-break: break-all;
@@ -117,7 +118,7 @@ margin-bottom: 0.5rem;
 }
 
 .link-url:hover {
-color: var(--color-primary-dark);
+color: white;
 text-decoration: underline;
 }
 
@@ -131,6 +132,6 @@ stroke-width: 2;
 .link-date {
 display: block;
 font-size: 0.75rem;
-color: var(--color-text-muted);
+color: rgba(255,255,255,0.6);
 margin-top: 0.5rem;
 }

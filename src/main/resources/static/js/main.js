@@ -5,6 +5,31 @@
  */
 
 // ==========================================================
+// 0. CSRF SUPPORT (for dynamically created forms)
+// ==========================================================
+
+const __csrfMetaTokenEl = document.querySelector('meta[name="_csrf"]');
+const __csrfMetaHeaderEl = document.querySelector('meta[name="_csrf_header"]');
+const __csrfMetaParamEl = document.querySelector('meta[name="_csrf_parameter"]');
+
+const __CSRF_TOKEN = __csrfMetaTokenEl ? __csrfMetaTokenEl.getAttribute('content') : null;
+const __CSRF_HEADER = __csrfMetaHeaderEl ? __csrfMetaHeaderEl.getAttribute('content') : 'X-CSRF-TOKEN';
+const __CSRF_PARAM = __csrfMetaParamEl ? __csrfMetaParamEl.getAttribute('content') : '_csrf';
+
+/**
+ * Append CSRF hidden field to a form if token is available
+ * @param {HTMLFormElement} form
+ */
+function appendCsrfInput(form) {
+    if (!form || !__CSRF_TOKEN) return;
+    const input = document.createElement('input');
+    input.type = 'hidden';
+    input.name = __CSRF_PARAM;
+    input.value = __CSRF_TOKEN;
+    form.appendChild(input);
+}
+
+// ==========================================================
 // 1. GESTION DES MODALES
 // ==========================================================
 
@@ -46,8 +71,8 @@ function deleteCategory(id) {
         // Route : /category/{id}/delete
         form.action = `/category/${id}/delete`;
 
-        // Assurez-vous d'avoir un token CSRF si vous utilisez Spring Security
-        // (Non inclus ici car non visible dans le pom.xml, mais bonne pratique)
+        // Ajoute le token CSRF
+        appendCsrfInput(form);
 
         document.body.appendChild(form);
         form.submit();
@@ -76,6 +101,8 @@ function deleteLink(id, categoryId) {
         inputCategory.value = categoryId;
 
         form.appendChild(inputCategory);
+        // Ajoute le token CSRF
+        appendCsrfInput(form);
         document.body.appendChild(form);
         form.submit();
     }
@@ -97,3 +124,17 @@ document.addEventListener('keydown', function (e) {
         }
     }
 });
+
+// ==========================================================
+// 3. GESTION DE LA SIDEBAR
+// ==========================================================
+
+/**
+ * Bascule l'état de la sidebar (ouverte/fermée) sur mobile.
+ */
+function toggleSidebar() {
+    const sidebar = document.querySelector('.sidebar');
+    if (sidebar) {
+        sidebar.classList.toggle('open');
+    }
+}

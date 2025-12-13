@@ -9,6 +9,13 @@
 .main-content {
     flex: 1;
     padding: 2rem;
+    margin-left: 60px; /* Account for sidebar */
+}
+
+@media (max-width: 768px) {
+    .main-content {
+        margin-left: 0;
+    }
 }
 
 .content-wrapper {
